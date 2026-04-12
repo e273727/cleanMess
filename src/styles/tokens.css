@@ -1,0 +1,117 @@
+/* CLEANMess — Design Tokens */
+/* All values sourced from .planning/phases/01-scaffold-foundation/01-UI-SPEC.md */
+
+:root {
+  /* ─── Colors ──────────────────────────────────────────── */
+
+  /* Backgrounds */
+  --color-bg: #F8FDF4;
+  --color-surface: #FFFFFF;
+  --color-surface-alt: #EFF9E8;
+
+  /* Brand — Green */
+  --color-primary: #2D8A4E;
+  --color-primary-dark: #1E6035;
+  --color-primary-light: #D4F0E0;
+
+  /* Brand — Yellow */
+  --color-accent: #F0B429;
+  --color-accent-dark: #C9870E;
+  --color-accent-light: #FEF3C7;
+
+  /* Text */
+  --color-text: #1A2E1A;
+  --color-text-muted: #4A6548;
+  --color-text-disabled: #9DB89A;
+
+  /* Borders */
+  --color-border: #D4E8CE;
+  --color-border-strong: #A8C8A0;
+
+  /* Semantic status */
+  --color-danger: #DC2626;
+  --color-danger-light: #FEE2E2;
+  --color-warning: #F59E0B;
+  --color-warning-light: #FEF3C7;
+  --color-success: #16A34A;
+  --color-success-light: #DCFCE7;
+
+  /* Overlay */
+  --color-overlay: rgba(26, 46, 26, 0.5);
+
+  /* ─── Spacing ─────────────────────────────────────────── */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-4xl: 96px;
+
+  /* ─── Typography ──────────────────────────────────────── */
+  --text-display: 3.5rem;      /* 56px */
+  --text-h1: 2.5rem;           /* 40px */
+  --text-h2: 2rem;             /* 32px */
+  --text-h3: 1.5rem;           /* 24px */
+  --text-h4: 1.25rem;          /* 20px */
+  --text-lg: 1.125rem;         /* 18px */
+  --text-base: 1rem;           /* 16px */
+  --text-sm: 0.875rem;         /* 14px */
+  --text-xs: 0.75rem;          /* 12px */
+  --text-mono: 0.875rem;       /* 14px */
+
+  /* Font weights */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-extrabold: 800;
+
+  /* ─── Border Radius ───────────────────────────────────── */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 32px;
+  --radius-full: 9999px;
+
+  /* ─── Shadows ─────────────────────────────────────────── */
+  --shadow-sm: 0 1px 3px rgba(45, 138, 78, 0.08);
+  --shadow-md: 0 4px 12px rgba(45, 138, 78, 0.12);
+  --shadow-lg: 0 8px 32px rgba(45, 138, 78, 0.15);
+
+  /* ─── Transitions ─────────────────────────────────────── */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+  --transition-enter: 600ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ─── Layout ──────────────────────────────────────────── */
+  --navbar-height: 64px;
+  --site-max-width: 1280px;
+  --content-max-width: 1100px;
+}
+
+/* ─── Dark Theme Stub (v2 — not active) ────────────────── */
+/* Uncomment and complete in Phase: Dark Mode */
+/*
+[data-theme="dark"] {
+  --color-bg: #0F1A0F;
+  --color-surface: #1A2E1A;
+  --color-surface-alt: #1F361F;
+  --color-text: #E8F5E0;
+  --color-text-muted: #8FBF83;
+  --color-border: #2D4A2D;
+  --color-border-strong: #3D6B3D;
+}
+*/
+
+/* ─── Responsive Typography ───────────────────────────── */
+@media (max-width: 768px) {
+  :root {
+    --text-display: 2.25rem;   /* 36px on mobile */
+    --text-h1: 1.75rem;        /* 28px on mobile */
+    --text-h2: 1.5rem;         /* 24px on mobile */
+    --text-h3: 1.25rem;        /* 20px on mobile */
+  }
+}

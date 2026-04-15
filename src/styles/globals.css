@@ -60,7 +60,6 @@ ol {
 .snap-section {
   min-height: 100dvh;
   scroll-snap-align: start;
-  overflow: hidden;
   position: relative;
 }
 

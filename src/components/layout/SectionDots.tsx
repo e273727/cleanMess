@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import styles from "./SectionDots.module.css";
 
 const SECTIONS = [
@@ -14,9 +15,14 @@ const SECTIONS = [
 ];
 
 export default function SectionDots() {
+  const pathname = usePathname();
   const [activeSection, setActiveSection] = useState("hero");
 
+  // ALL hooks must be called unconditionally before any early returns
   useEffect(() => {
+    // Don't set up observer on non-home routes
+    if (pathname.startsWith("/dashboard")) return;
+
     const snapContainer = document.getElementById("snap-container");
     if (!snapContainer) return;
 
@@ -41,7 +47,13 @@ export default function SectionDots() {
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [pathname]);
+
+  // Hide SectionDots on dashboard and other non-homepage routes
+  // (MUST be after all hook calls)
+  if (pathname.startsWith("/dashboard")) {
+    return null;
+  }
 
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);

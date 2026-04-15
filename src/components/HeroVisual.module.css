@@ -1,0 +1,117 @@
+.container {
+  width: 100%;
+  max-width: 600px;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  padding: var(--space-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.waveform {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 8px 24px rgba(45, 138, 78, 0.15));
+}
+
+.wave {
+  animation: wave1 3s ease-in-out infinite;
+}
+
+.line {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 2px 8px rgba(45, 138, 78, 0.1));
+}
+
+.linePrimary {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 2px 8px rgba(45, 138, 78, 0.1));
+  animation: wave2 4s ease-in-out infinite;
+}
+
+.lineAccent {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 2px 8px rgba(45, 138, 78, 0.1));
+  animation: wave3 5s ease-in-out infinite;
+}
+
+.dots {
+  /* Pulsing sensor dots */
+}
+
+.dot {
+  animation: pulse-dot 2.5s ease-in-out infinite;
+}
+
+.dot:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+.dot:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+.dot:nth-child(4) {
+  animation-delay: 0.9s;
+}
+
+/* ─── Keyframes ─────────────────────────────────────────── */
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+    r: 3;
+  }
+  50% {
+    opacity: 0.5;
+    r: 5;
+  }
+}
+
+@keyframes wave1 {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-10px);
+  }
+}
+
+@keyframes wave2 {
+  0%, 100% {
+    transform: translateX(0) translateY(0);
+  }
+  50% {
+    transform: translateX(8px) translateY(-5px);
+  }
+}
+
+@keyframes wave3 {
+  0%, 100% {
+    transform: translateX(0) translateY(0);
+  }
+  50% {
+    transform: translateX(-6px) translateY(5px);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    height: 200px;
+    margin-top: var(--space-lg);
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    height: 160px;
+    max-width: 100%;
+  }
+}

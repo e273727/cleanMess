@@ -9,15 +9,15 @@
   --color-surface: #FFFFFF;
   --color-surface-alt: #EFF9E8;
 
-  /* Brand — Green */
-  --color-primary: #2D8A4E;
-  --color-primary-dark: #1E6035;
-  --color-primary-light: #D4F0E0;
+  /* Brand — Primary (Earthy Green) */
+  --color-primary: #8EB51D;
+  --color-primary-dark: #6A8815;
+  --color-primary-light: #D2E6A3;
 
-  /* Brand — Yellow */
-  --color-accent: #F0B429;
-  --color-accent-dark: #C9870E;
-  --color-accent-light: #FEF3C7;
+  /* Brand — Accent (Matched to remove gradient) */
+  --color-accent: #8EB51D;
+  --color-accent-dark: #6A8815;
+  --color-accent-light: #D2E6A3;
 
   /* Text */
   --color-text: #1A2E1A;

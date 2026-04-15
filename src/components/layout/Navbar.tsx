@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { BarChart2 } from "lucide-react";
 import styles from "./Navbar.module.css";
 
@@ -9,34 +10,37 @@ const NAV_ITEMS = [
   { label: "Home", href: "#hero" },
   { label: "Problem", href: "#problem" },
   { label: "How It Works", href: "#how-it-works" },
-  { label: "Features", href: "#features" },
-  { label: "Dashboard", href: "#dashboard-teaser" },
+  { label: "Dashboard", href: "#dashboard-tease" },
   { label: "About", href: "#about" },
   { label: "Contact", href: "#contact" },
 ] as const;
 
 export default function Navbar() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const isHome = pathname === "/";
+
   const [activeSection, setActiveSection] = useState<string>("hero");
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
+  /* ── Scroll tracking + IntersectionObserver (home only) ─────── */
   useEffect(() => {
-    // Track scroll for shadow
+    if (!isHome) return;
+
     const snapContainer = document.querySelector(".snap-container");
     const scrollTarget = snapContainer ?? window;
 
     const handleScroll = () => {
-      const scrollY =
-        snapContainer
-          ? (snapContainer as HTMLElement).scrollTop
-          : window.scrollY;
+      const scrollY = snapContainer
+        ? (snapContainer as HTMLElement).scrollTop
+        : window.scrollY;
       setIsScrolled(scrollY > 10);
     };
 
     scrollTarget.addEventListener("scroll", handleScroll, { passive: true });
 
-    // IntersectionObserver for active section tracking
     const sections = document.querySelectorAll(".snap-section[id]");
 
     observerRef.current = new IntersectionObserver(
@@ -62,20 +66,52 @@ export default function Navbar() {
       scrollTarget.removeEventListener("scroll", handleScroll);
       observerRef.current?.disconnect();
     };
-  }, []);
+  }, [isHome]);
 
+  /* ── On home: scroll to hash after route change ─────────────── */
+  useEffect(() => {
+    if (!isHome) return;
+    const hash = window.location.hash;
+    if (!hash) return;
+
+    const tryScroll = (attempts = 0) => {
+      const el = document.getElementById(hash.replace("#", ""));
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      } else if (attempts < 10) {
+        setTimeout(() => tryScroll(attempts + 1), 100);
+      }
+    };
+
+    tryScroll();
+  }, [isHome, pathname]);
+
+  /* ── Nav click handler ──────────────────────────────────────── */
   const handleNavClick = (href: string) => {
     setIsMobileOpen(false);
     const id = href.replace("#", "");
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth" });
+
+    if (isHome) {
+      // Already on home — just smooth-scroll
+      const el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    } else {
+      // On another page (e.g. /dashboard) — go to home with the hash
+      router.push(`/${href}`);
     }
+  };
+
+  /* ── Active link check ──────────────────────────────────────── */
+  const isActive = (href: string) => {
+    if (!isHome) return false; // on /dashboard, none of the hash links are "active"
+    return activeSection === href.replace("#", "");
   };
 
   return (
     <nav
-      className={`${styles.navbar} ${isScrolled ? styles.scrolled : ""}`}
+      className={`${styles.navbar} ${isScrolled ? styles.scrolled : ""} ${
+        !isHome ? styles.dashboard : ""
+      }`}
       aria-label="Main navigation"
     >
       <div className={styles.inner}>
@@ -91,17 +127,13 @@ export default function Navbar() {
             {NAV_ITEMS.map(({ label, href }) => (
               <li key={href}>
                 <a
-                  href={href}
-                  className={`${styles.navLink} ${
-                    activeSection === href.replace("#", "") ? styles.active : ""
-                  }`}
+                  href={isHome ? href : `/${href}`}
+                  className={`${styles.navLink} ${isActive(href) ? styles.active : ""}`}
                   onClick={(e) => {
                     e.preventDefault();
                     handleNavClick(href);
                   }}
-                  aria-current={
-                    activeSection === href.replace("#", "") ? "page" : undefined
-                  }
+                  aria-current={isActive(href) ? "page" : undefined}
                 >
                   {label}
                 </a>
@@ -111,7 +143,7 @@ export default function Navbar() {
 
           <Link
             href="/dashboard"
-            className={styles.ctaButton}
+            className={`${styles.ctaButton} ${!isHome ? styles.ctaActive : ""}`}
             aria-label="View full sensor dashboard"
           >
             <BarChart2 size={16} aria-hidden="true" />
@@ -143,10 +175,8 @@ export default function Navbar() {
         {NAV_ITEMS.map(({ label, href }) => (
           <a
             key={href}
-            href={href}
-            className={`${styles.mobileNavLink} ${
-              activeSection === href.replace("#", "") ? styles.active : ""
-            }`}
+            href={isHome ? href : `/${href}`}
+            className={`${styles.mobileNavLink} ${isActive(href) ? styles.active : ""}`}
             onClick={(e) => {
               e.preventDefault();
               handleNavClick(href);

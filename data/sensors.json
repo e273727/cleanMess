@@ -1,0 +1,44 @@
+[
+  {
+    "id": "sensor-1",
+    "name": "pH Level - Canteen A",
+    "type": "pH",
+    "currentValue": 6.8,
+    "normalRange": { "min": 6.5, "max": 7.5 }
+  },
+  {
+    "id": "sensor-2",
+    "name": "Turbidity - Canteen A",
+    "type": "Turbidity",
+    "currentValue": 2.1,
+    "normalRange": { "min": 0, "max": 5 }
+  },
+  {
+    "id": "sensor-3",
+    "name": "Temperature - Canteen A",
+    "type": "Temperature",
+    "currentValue": 24.5,
+    "normalRange": { "min": 20, "max": 28 }
+  },
+  {
+    "id": "sensor-4",
+    "name": "Microbial Count - Canteen A",
+    "type": "Microbial",
+    "currentValue": 150,
+    "normalRange": { "min": 0, "max": 1000 }
+  },
+  {
+    "id": "sensor-5",
+    "name": "pH Level - Canteen B",
+    "type": "pH",
+    "currentValue": 4.2,
+    "normalRange": { "min": 6.5, "max": 7.5 }
+  },
+  {
+    "id": "sensor-6",
+    "name": "Temperature - Canteen B",
+    "type": "Temperature",
+    "currentValue": 35.8,
+    "normalRange": { "min": 20, "max": 28 }
+  }
+]

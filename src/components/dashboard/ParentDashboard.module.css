@@ -1,0 +1,432 @@
+.parentDashboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xl);
+}
+
+.welcome {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-2xl);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  border-radius: var(--radius-xl);
+  color: white;
+}
+
+.welcomeTitle {
+  font-size: var(--text-h2);
+  font-weight: var(--weight-bold);
+  margin: 0;
+  padding: 0;
+  line-height: 1.3;
+}
+
+.welcomeText {
+  font-size: var(--text-base);
+  opacity: 0.95;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+.criticalAlerts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.sectionTitle {
+  font-size: var(--text-h3);
+  font-weight: var(--weight-bold);
+  color: var(--color-text);
+  margin: 0;
+  padding: 0;
+}
+
+.alertsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.alertBox {
+  display: flex;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  background: rgba(239, 68, 68, 0.1);
+  border-left: 4px solid #ef4444;
+  border-radius: var(--radius-lg);
+}
+
+.alertIconBig {
+  font-size: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+}
+
+.alertContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  flex: 1;
+}
+
+.alertTitle {
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: #dc2626;
+  margin: 0;
+  padding: 0;
+}
+
+.alertMessage {
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+.alertTime {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  margin: 0;
+  padding: 0;
+}
+
+.peaceOfMind {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.pomCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding: var(--space-2xl);
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-xl);
+  border: 2px solid var(--color-primary);
+}
+
+.pomIcon {
+  font-size: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  border-radius: var(--radius-lg);
+  color: white;
+}
+
+.pomTitle {
+  font-size: var(--text-h3);
+  font-weight: var(--weight-bold);
+  color: var(--color-text);
+  margin: 0;
+  padding: 0;
+}
+
+.pomList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.pomList li {
+  font-size: var(--text-base);
+  color: var(--color-text);
+  line-height: 1.6;
+  padding-left: var(--space-lg);
+  position: relative;
+}
+
+.pomList li:before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--color-primary);
+  font-weight: bold;
+}
+
+.pomList strong {
+  color: var(--color-primary);
+  font-weight: var(--weight-bold);
+}
+
+.statusOverview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.statusGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-lg);
+}
+
+.statusCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  padding: var(--space-lg);
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-lg);
+  border: 2px solid;
+  transition: all var(--transition-base);
+}
+
+.statusCard.good {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.statusCard.warning {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.05);
+}
+
+.statusCard.critical {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.statusCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.canteenName {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-bold);
+  color: var(--color-text);
+  margin: 0;
+  padding: 0;
+}
+
+.statusEmoji {
+  font-size: 28px;
+  margin: 0;
+  padding: 0;
+}
+
+.statusDetails {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.detail {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--text-sm);
+}
+
+.detailLabel {
+  color: var(--color-text-muted);
+  font-weight: var(--weight-medium);
+}
+
+.detailValue {
+  color: var(--color-primary);
+  font-weight: var(--weight-bold);
+}
+
+.allSensors {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.sensorsTable {
+  overflow-x: auto;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-surface-alt);
+}
+
+.table thead {
+  background: var(--color-primary);
+  color: white;
+}
+
+.table th {
+  padding: var(--space-md) var(--space-lg);
+  text-align: left;
+  font-weight: var(--weight-bold);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.table td {
+  padding: var(--space-md) var(--space-lg);
+  border-top: 1px solid var(--color-border);
+  font-size: var(--text-sm);
+}
+
+.table tbody tr {
+  transition: all var(--transition-base);
+}
+
+.table tbody tr:hover {
+  background: var(--color-bg);
+}
+
+.table tbody tr.good {
+  border-left: 3px solid #10b981;
+}
+
+.table tbody tr.warning {
+  border-left: 3px solid #f59e0b;
+}
+
+.table tbody tr.critical {
+  border-left: 3px solid #ef4444;
+}
+
+.statusCell {
+  font-weight: var(--weight-bold);
+}
+
+.trendSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.trendSubtitle {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin: 0;
+  padding: 0;
+}
+
+.trendChartWrapper {
+  width: 100%;
+  min-height: 220px;
+  padding: var(--space-lg);
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+}
+
+.support {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.supportBox {
+  padding: var(--space-2xl);
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--color-primary);
+}
+
+.supportBox p {
+  font-size: var(--text-base);
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+.contactInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-top: var(--space-lg);
+}
+
+.contactInfo p {
+  margin: 0;
+  padding: 0;
+}
+
+.contactInfo a {
+  color: var(--color-primary);
+  font-weight: var(--weight-bold);
+  text-decoration: none;
+  transition: all var(--transition-base);
+}
+
+.contactInfo a:hover {
+  text-decoration: underline;
+}
+
+/* ─── Mobile Responsive ───────────────────────────────── */
+@media (max-width: 1024px) {
+  .statusGrid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .table {
+    font-size: var(--text-xs);
+  }
+
+  .table th,
+  .table td {
+    padding: var(--space-sm);
+  }
+}
+
+@media (max-width: 768px) {
+  .welcome {
+    padding: var(--space-lg);
+  }
+
+  .welcomeTitle {
+    font-size: var(--text-h4);
+  }
+
+  .welcomeText {
+    font-size: var(--text-sm);
+  }
+
+  .statusGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .pomCard {
+    padding: var(--space-lg);
+  }
+
+  .pomIcon {
+    width: 60px;
+    height: 60px;
+    font-size: 36px;
+  }
+
+  .pomTitle {
+    font-size: var(--text-h4);
+  }
+
+  .sensorsTable {
+    border-radius: 0;
+  }
+
+  .table {
+    font-size: var(--text-xs);
+  }
+
+  .table th,
+  .table td {
+    padding: var(--space-xs);
+  }
+}

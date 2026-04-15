@@ -11,11 +11,21 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--color-border);
-  transition: box-shadow var(--transition-base);
+  transition: box-shadow var(--transition-base), background-color var(--transition-base);
 }
 
 .navbar.scrolled {
   box-shadow: var(--shadow-sm);
+  background-color: rgba(var(--color-surface-rgb, 10,10,10), 0.96);
+}
+
+/* On /dashboard: always fully opaque — no hero image behind it */
+.navbar.dashboard {
+  background-color: var(--color-surface);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: var(--shadow-sm);
+  border-bottom-color: var(--color-border);
 }
 
 .inner {
@@ -28,7 +38,7 @@
   padding: 0 var(--space-lg);
 }
 
-/* Logo */
+/* ── Logo ───────────────────────────────────────── */
 .logo {
   display: flex;
   align-items: center;
@@ -39,6 +49,11 @@
   letter-spacing: -0.01em;
   text-decoration: none;
   flex-shrink: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.logo:hover {
+  opacity: 0.85;
 }
 
 .logoDot {
@@ -49,34 +64,54 @@
   flex-shrink: 0;
 }
 
-/* Desktop nav links */
+/* ── Desktop nav links ──────────────────────────── */
 .navLinks {
   display: flex;
   align-items: center;
-  gap: var(--space-xl);
+  gap: var(--space-lg);
   list-style: none;
 }
 
 .navLink {
+  position: relative;
   font-size: var(--text-sm);
   font-weight: var(--weight-medium);
   color: var(--color-text-muted);
   text-decoration: none;
-  padding-bottom: 2px;
-  border-bottom: 2px solid transparent;
-  transition: color var(--transition-fast), border-color var(--transition-fast);
+  padding-bottom: 3px;
+  transition: color var(--transition-fast);
+}
+
+/* animated underline */
+.navLink::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--color-primary);
+  border-radius: var(--radius-full);
+  transition: width var(--transition-base);
 }
 
 .navLink:hover {
   color: var(--color-primary);
 }
 
-.navLink.active {
-  color: var(--color-primary);
-  border-bottom-color: var(--color-primary);
+.navLink:hover::after {
+  width: 100%;
 }
 
-/* Dashboard CTA button */
+.navLink.active {
+  color: var(--color-primary);
+}
+
+.navLink.active::after {
+  width: 100%;
+}
+
+/* ── Dashboard CTA button ───────────────────────── */
 .ctaButton {
   display: inline-flex;
   align-items: center;
@@ -90,6 +125,7 @@
   text-decoration: none;
   transition: background-color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
   flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .ctaButton:hover {
@@ -102,31 +138,45 @@
   transform: translateY(0);
 }
 
-/* Actions row (links + CTA) */
+/* Active state when already on /dashboard */
+.ctaActive {
+  box-shadow: 0 0 0 2px var(--color-primary);
+  background-color: var(--color-primary-dark);
+}
+
+/* ── Actions row (links + CTA) ──────────────────── */
 .actions {
   display: flex;
   align-items: center;
-  gap: var(--space-2xl);
+  gap: var(--space-xl);
 }
 
-/* Hamburger button */
+/* ── Hamburger button ───────────────────────────── */
 .hamburger {
   display: none;
   flex-direction: column;
+  justify-content: center;
   gap: 5px;
-  width: 24px;
+  width: 32px;
+  height: 32px;
   cursor: pointer;
   background: none;
   border: none;
   padding: var(--space-xs);
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition-fast);
+}
+
+.hamburger:hover {
+  background-color: var(--color-border);
 }
 
 .hamburgerLine {
-  width: 24px;
+  width: 22px;
   height: 2px;
   background-color: var(--color-text);
   border-radius: var(--radius-full);
-  transition: transform var(--transition-base), opacity var(--transition-base);
+  transition: transform var(--transition-base), opacity var(--transition-base), width var(--transition-fast);
 }
 
 .hamburger.open .hamburgerLine:nth-child(1) {
@@ -135,15 +185,15 @@
 
 .hamburger.open .hamburgerLine:nth-child(2) {
   opacity: 0;
+  width: 0;
 }
 
 .hamburger.open .hamburgerLine:nth-child(3) {
   transform: translateY(-7px) rotate(-45deg);
 }
 
-/* Mobile menu overlay */
+/* ── Mobile menu — smooth slide-down ──────────────── */
 .mobileMenu {
-  display: none;
   position: fixed;
   top: var(--navbar-height);
   left: 0;
@@ -151,34 +201,59 @@
   background-color: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
   box-shadow: var(--shadow-md);
-  padding: var(--space-lg);
+  padding: 0 var(--space-lg);
   flex-direction: column;
-  gap: var(--space-md);
+  gap: 0;
   z-index: 99;
+  overflow: hidden;
+
+  /* slide animation */
+  max-height: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.25s ease,
+              padding 0.3s ease;
 }
 
 .mobileMenu.open {
-  display: flex;
+  max-height: 480px;
+  opacity: 1;
+  pointer-events: auto;
+  padding-top: var(--space-md);
+  padding-bottom: var(--space-lg);
 }
 
 .mobileNavLink {
+  display: block;
   font-size: var(--text-base);
   font-weight: var(--weight-medium);
   color: var(--color-text-muted);
   text-decoration: none;
   padding: var(--space-sm) 0;
   border-bottom: 1px solid var(--color-border);
-  transition: color var(--transition-fast);
+  transition: color var(--transition-fast), padding-left var(--transition-fast);
 }
 
-.mobileNavLink:hover,
+.mobileNavLink:last-of-type {
+  border-bottom: none;
+}
+
+.mobileNavLink:hover {
+  color: var(--color-primary);
+  padding-left: 6px;
+}
+
 .mobileNavLink.active {
   color: var(--color-primary);
+  padding-left: 6px;
 }
 
 .mobileCtaButton {
-  display: inline-flex;
+  display: flex;
+  align-items: center;
   justify-content: center;
+  gap: var(--space-xs);
   padding: var(--space-md);
   background-color: var(--color-primary);
   color: #ffffff;
@@ -186,12 +261,13 @@
   font-weight: var(--weight-semibold);
   border-radius: var(--radius-sm);
   text-decoration: none;
-  margin-top: var(--space-sm);
-  transition: background-color var(--transition-fast);
+  margin-top: var(--space-md);
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
 }
 
 .mobileCtaButton:hover {
   background-color: var(--color-primary-dark);
+  transform: translateY(-1px);
 }
 
 /* ─── Responsive ─────────────────────────────────── */
@@ -204,4 +280,15 @@
   .hamburger {
     display: flex;
   }
+
+  .inner {
+    padding: 0 var(--space-md);
+  }
 }
+
+@media (max-width: 480px) {
+  .logo {
+    font-size: var(--text-base);
+  }
+}
+

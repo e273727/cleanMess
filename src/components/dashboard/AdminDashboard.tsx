@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import {
   BarChart,
   Bar,
@@ -13,6 +14,9 @@ import {
   RadialBar,
 } from 'recharts';
 import styles from './AdminDashboard.module.css';
+import SystemSettingsModal from './SystemSettingsModal';
+import BroadcastAlertModal from './BroadcastAlertModal';
+import ManageUsersModal from './ManageUsersModal';
 
 interface SensorData {
   id: string;
@@ -46,9 +50,92 @@ const STATUS_COLORS: Record<string, string> = {
 };
 
 export default function AdminDashboard({
-  sensorData,
+  sensorData: initialSensorData,
   notifications,
 }: AdminDashboardProps) {
+  const [sensorData, setSensorData] = useState(initialSensorData);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isBroadcastOpen, setIsBroadcastOpen] = useState(false);
+  const [isUsersOpen, setIsUsersOpen] = useState(false);
+
+  useEffect(() => {
+    // Simulate real-time data fluctuations every 2 seconds for a dynamic feel
+    const interval = setInterval(() => {
+      setSensorData((prevData) => 
+        prevData.map((sensor) => {
+          // Fluctuate between -8% and +8%
+          const fluctuation = sensor.currentValue * (Math.random() * 0.16 - 0.08);
+          let newValue = sensor.currentValue + fluctuation;
+          
+          if (sensor.type === 'pH') {
+            newValue = Math.max(0, Math.min(14, Number(newValue.toFixed(2))));
+          } else {
+            newValue = Math.max(0, Math.floor(newValue));
+          }
+
+          let newStatus = sensor.status;
+          const range = sensor.normalRange.max - sensor.normalRange.min;
+          
+          if (newValue > sensor.normalRange.max + range * 0.15 || newValue < sensor.normalRange.min - range * 0.15) {
+            newStatus = 'critical';
+          } else if (newValue > sensor.normalRange.max || newValue < sensor.normalRange.min) {
+            newStatus = 'warning';
+          } else {
+            newStatus = 'good';
+          }
+
+          return {
+            ...sensor,
+            currentValue: newValue,
+            status: newStatus as 'good' | 'warning' | 'critical',
+            lastUpdated: new Date().toISOString(),
+          };
+        })
+      );
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleGenerateReport = () => {
+    setIsGenerating(true);
+    
+    try {
+      const headers = ['Sensor ID', 'Name', 'Type', 'Current Value', 'Status', 'Last Updated', 'Normal Min', 'Normal Max'];
+      const rows = sensorData.map((s) => [
+        s.id,
+        s.name,
+        s.type,
+        s.currentValue,
+        s.status,
+        new Date(s.lastUpdated).toLocaleString(),
+        s.normalRange.min,
+        s.normalRange.max
+      ]);
+
+      const csvContent = [
+        headers.join(','),
+        ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+      ].join('\n');
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `cleanmess_sensor_report_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Failed to generate report:', error);
+      alert('Failed to generate report.');
+    } finally {
+      setTimeout(() => setIsGenerating(false), 800);
+    }
+  };
+
   const criticalCount = sensorData.filter((s) => s.status === 'critical').length;
   const warningCount = sensorData.filter((s) => s.status === 'warning').length;
   const goodCount = sensorData.filter((s) => s.status === 'good').length;
@@ -122,32 +209,52 @@ export default function AdminDashboard({
           <div className={styles.chartWrapper}>
             <ResponsiveContainer width="100%" height={220} minWidth={1} minHeight={1}>
               <BarChart data={barData} margin={{ top: 8, right: 8, left: -20, bottom: 40 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(45,138,78,0.1)" />
+                <defs>
+                  <linearGradient id="colorGood" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#10b981" stopOpacity={0.9}/>
+                    <stop offset="95%" stopColor="#10b981" stopOpacity={0.2}/>
+                  </linearGradient>
+                  <linearGradient id="colorWarning" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.9}/>
+                    <stop offset="95%" stopColor="#f59e0b" stopOpacity={0.2}/>
+                  </linearGradient>
+                  <linearGradient id="colorCritical" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#ef4444" stopOpacity={0.9}/>
+                    <stop offset="95%" stopColor="#ef4444" stopOpacity={0.2}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(45,138,78,0.1)" vertical={false} />
                 <XAxis
                   dataKey="name"
-                  tick={{ fontSize: 10, fill: '#4A6548' }}
+                  tick={{ fontSize: 10, fill: '#4A6548', fontWeight: 500 }}
                   angle={-35}
                   textAnchor="end"
                   interval={0}
                   axisLine={false}
                   tickLine={false}
                 />
-                <YAxis tick={{ fontSize: 10, fill: '#4A6548' }} />
+                <YAxis tick={{ fontSize: 10, fill: '#4A6548' }} axisLine={false} tickLine={false} />
                 <Tooltip
+                  cursor={{ fill: 'rgba(45,138,78,0.05)' }}
                   contentStyle={{
                     background: 'white',
-                    border: '1px solid #D4E8CE',
+                    border: 'none',
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
                     borderRadius: '8px',
                     fontSize: '12px',
+                    fontWeight: 500,
                   }}
                 />
-                <Bar dataKey="value" radius={[4, 4, 0, 0]}>
-                  {barData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={STATUS_COLORS[entry.status] ?? '#2D8A4E'}
-                    />
-                  ))}
+                <Bar 
+                  dataKey="value" 
+                  radius={[6, 6, 0, 0]} 
+                  animationDuration={1500} 
+                  animationEasing="ease-out"
+                >
+                  {barData.map((entry, index) => {
+                    const gradientId = entry.status === 'good' ? 'colorGood' : entry.status === 'warning' ? 'colorWarning' : 'colorCritical';
+                    return <Cell key={`cell-${index}`} fill={`url(#${gradientId})`} />;
+                  })}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
@@ -171,8 +278,10 @@ export default function AdminDashboard({
               >
                 <RadialBar
                   dataKey="value"
-                  cornerRadius={8}
+                  cornerRadius={12}
                   background={{ fill: '#EFF9E8' }}
+                  animationDuration={1500}
+                  animationEasing="ease-out"
                 />
               </RadialBarChart>
             </ResponsiveContainer>
@@ -267,12 +376,32 @@ export default function AdminDashboard({
       <section className={styles.adminActions}>
         <h2 className={styles.sectionTitle}>Admin Actions</h2>
         <div className={styles.actionButtons}>
-          <button className={styles.actionButton}>📊 Generate Report</button>
-          <button className={styles.actionButton}>🔧 System Settings</button>
-          <button className={styles.actionButton}>📢 Broadcast Alert</button>
-          <button className={styles.actionButton}>👥 Manage Users</button>
+          <button 
+            className={styles.actionButton} 
+            onClick={handleGenerateReport}
+            disabled={isGenerating}
+            style={{ opacity: isGenerating ? 0.7 : 1, cursor: isGenerating ? 'wait' : 'pointer' }}
+          >
+            {isGenerating ? '⏳ Generating...' : '📊 Generate Report'}
+          </button>
+          <button className={styles.actionButton} onClick={() => setIsSettingsOpen(true)}>🔧 System Settings</button>
+          <button className={styles.actionButton} onClick={() => setIsBroadcastOpen(true)}>📢 Broadcast Alert</button>
+          <button className={styles.actionButton} onClick={() => setIsUsersOpen(true)}>👥 Manage Users</button>
         </div>
       </section>
+
+      <SystemSettingsModal 
+        isOpen={isSettingsOpen} 
+        onClose={() => setIsSettingsOpen(false)} 
+      />
+      <BroadcastAlertModal 
+        isOpen={isBroadcastOpen} 
+        onClose={() => setIsBroadcastOpen(false)} 
+      />
+      <ManageUsersModal 
+        isOpen={isUsersOpen} 
+        onClose={() => setIsUsersOpen(false)} 
+      />
     </div>
   );
 }
